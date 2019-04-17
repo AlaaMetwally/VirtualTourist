@@ -26,7 +26,7 @@
                                 <gestureRecognizers/>
                                 <connections>
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="nS0-Iz-TEJ"/>
-                                    <outletCollection property="gestureRecognizers" destination="vWr-nC-Lw2" appends="YES" id="gmQ-Oa-5SK"/>
+                                    <outletCollection property="gestureRecognizers" destination="aVs-NX-YOm" appends="YES" id="GGp-AJ-TQP"/>
                                 </connections>
                             </mapView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yc0-AX-EAz">
@@ -74,11 +74,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="vWr-nC-Lw2">
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="aVs-NX-YOm">
                     <connections>
-                        <action selector="addPin:" destination="BYZ-38-t0r" id="Kcy-Ly-shU"/>
+                        <action selector="addPinGesture:" destination="BYZ-38-t0r" id="pCg-cV-7jw"/>
                     </connections>
-                </tapGestureRecognizer>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-268" y="15.742128935532236"/>
         </scene>

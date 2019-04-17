@@ -9,23 +9,18 @@
 import Foundation
 import UIKit
 import MapKit
+import CoreData
 
-class Place: Equatable{
+extension Place{
+    public override func awakeFromInsert() {
+        super.awakeFromInsert()
+        creationDate = Date()
+    }
+    
     static func == (lhs: Place, rhs: Place) -> Bool {
         if (rhs.image == lhs.image){
             return true
         }
         return false
     }
-    
-    var title: String = ""
-    var image: String = ""
-    var coordinates: CLLocationCoordinate2D?
-
-    init(title: String, image: String, coordinates: CLLocationCoordinate2D) {
-        self.title = title
-        self.image = image
-        self.coordinates = coordinates
-    }
-
 }

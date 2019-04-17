@@ -8,12 +8,23 @@
 
 import Foundation
 import MapKit
+import CoreData
 
-class FlickrConfig {
-    var longitude: Double
-    var latitude: Double
-    var coordinate: CLLocationCoordinate2D
-    var methodParameters = [
+extension Pin: MKAnnotation{
+    
+    public override func awakeFromInsert() {
+        super.awakeFromInsert()
+        creationDate = Date()
+    }
+    
+    public var coordinate: CLLocationCoordinate2D {
+        get {
+            let coordinate = CLLocationCoordinate2DMake(self.latitude as! CLLocationDegrees, self.longitude as! CLLocationDegrees)
+            return coordinate
+        }
+    }
+    
+    private static var methodParameters = [
         Constants.FlickrParametersKeys.APIKey : Constants.FlickrParametersValues.APIKey,
         Constants.FlickrParametersKeys.Extras : Constants.FlickrParametersValues.Extras,
         Constants.FlickrParametersKeys.Format : Constants.FlickrParametersValues.Format,
@@ -23,18 +34,6 @@ class FlickrConfig {
         Constants.FlickrParametersKeys.SafeSearch : Constants.FlickrParametersValues.SafeSearch
         ] as [String : Any]
     
-    init(latitude: Double, longitude: Double) {
-        self.latitude = latitude
-        self.longitude = longitude
-        var coordinate: CLLocationCoordinate2D {
-            get {
-                let coordinate = CLLocationCoordinate2DMake(latitude as CLLocationDegrees, longitude as CLLocationDegrees)
-                return coordinate
-            }
-        }
-        self.coordinate = coordinate
-    }
- 
     func getBbox(latitude: Double,longitude: Double) -> String{
         if longitude != nil && latitude != nil{
             let minimumLon = max(longitude - Constants.Flickr.SearchBBoxHalfWidth, Constants.Flickr.SearchLonRange.0)
@@ -50,7 +49,7 @@ class FlickrConfig {
     
     func flickrURL() -> URL{
         var components = URLComponents()
-        methodParameters[Constants.FlickrParametersKeys.BBox ] = getBbox(latitude: latitude,longitude: longitude)
+        Pin.methodParameters[Constants.FlickrParametersKeys.BBox ] = getBbox(latitude: latitude,longitude: longitude)
         
         components.host = Constants.Flickr.APIHost
         components.scheme = Constants.Flickr.APIScheme
@@ -58,7 +57,7 @@ class FlickrConfig {
         
         components.queryItems =  [URLQueryItem]()
         
-        for (key, value) in methodParameters {
+        for (key, value) in Pin.methodParameters {
             let queryItem = URLQueryItem(name: key, value: "\(value)")
             components.queryItems!.append(queryItem)
         }

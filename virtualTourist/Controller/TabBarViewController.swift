@@ -9,6 +9,6 @@
 import UIKit
 
 class TabBarViewController: UITabBarController {
-    var places: [Place?] = []
-
+    var pin: Pin? = nil
+    var dataController: DataController!
 }
