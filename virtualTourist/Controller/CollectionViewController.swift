@@ -37,19 +37,7 @@ class CollectionViewController:  UIViewController, UICollectionViewDelegate, UIC
         pin = tabController.pin
         collectionView?.allowsMultipleSelection = true
         dataController = tabController.dataController
-        let predicate = NSPredicate(format: "pin == %@", pin!)
-        fetchRequest.predicate = predicate
-        let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: true)
-        fetchRequest.sortDescriptors = [sortDescriptor]
-        
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: "\(pin)-album")
-        print(fetchRequest)
-        fetchedResultsController.delegate = self
-        do{
-            try fetchedResultsController.performFetch()
-        }catch{
-            fatalError("The fetch could not be performed: \(error.localizedDescription)")
-        }
+        fetchConfig()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -66,6 +54,24 @@ class CollectionViewController:  UIViewController, UICollectionViewDelegate, UIC
         let annotation = MKPointAnnotation()
         annotation.coordinate = coordinate
         mapView.addAnnotation(annotation)
+        fetchConfig()
+        collectionView.reloadData()
+    }
+    
+    func fetchConfig(){
+        let predicate = NSPredicate(format: "pin == %@", pin!)
+        fetchRequest.predicate = predicate
+        let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: "\(pin)-album")
+        print(fetchRequest)
+        fetchedResultsController.delegate = self
+        do{
+            try fetchedResultsController.performFetch()
+        }catch{
+            fatalError("The fetch could not be performed: \(error.localizedDescription)")
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {

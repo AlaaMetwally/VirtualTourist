@@ -17,6 +17,8 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     var fetchedResultsController:NSFetchedResultsController<Place>!
+    let fetchRequest:NSFetchRequest<Place> = Place.fetchRequest()
+
     var pin: Pin? = nil
     var dataController: DataController!
 
@@ -31,13 +33,17 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
         pin = tabController.pin
         dataController = tabController.dataController
         let fetchRequest:NSFetchRequest<Place> = Place.fetchRequest()
+        fetchConfig()
+    }
+    
+    func fetchConfig(){
         let predicate = NSPredicate(format: "pin == %@", pin!)
         fetchRequest.predicate = predicate
         let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
         
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: "\(pin)-places")
-        
+        print(fetchRequest)
         fetchedResultsController.delegate = self
         do{
             try fetchedResultsController.performFetch()
@@ -45,7 +51,6 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
             fatalError("The fetch could not be performed: \(error.localizedDescription)")
         }
     }
-    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         fetchedResultsController = nil
@@ -66,6 +71,8 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
         let annotation = MKPointAnnotation()
         annotation.coordinate = coordinate
         mapView.addAnnotation(annotation)
+        fetchConfig()
+        tableView.reloadData()
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
